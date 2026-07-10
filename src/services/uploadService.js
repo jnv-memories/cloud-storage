@@ -6,7 +6,7 @@ import { splitFile } from "../utils/splitFile";
 import { getSessionId } from "../utils/sessionId";
 
 
-async function uploadSingle(file, onProgress,signal) {
+async function uploadSingle(file, onProgress, signal) {
 
     const formData = new FormData();
     formData.append(
@@ -89,183 +89,204 @@ async function uploadSingle(file, onProgress,signal) {
     };
 }
 
-async function uploadFile(file, onProgress = () => {}, signal, resumeSession=null) {
+async function uploadFile(file, onProgress = () => { }, signal, resumeSession = null) {
     if (file.size <= config.MULTIPART_LIMIT) {
+        const sessionId = getSessionId(file);
+        let session = resumeSession || await storageService.getUploadSession(sessionId);
+        if (!session) {
+            session = {
+                sessionId,
+                multipart: false,
+                status: "uploading",
+                uploaded: false,
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                lastModified: file.lastModified,
+                createdAt: new Date().toISOString()
+            };
+            await storageService.createUploadSession(session);
+        }
         const result = await uploadSingle(
             file,
             onProgress,
             signal
-         );
+        );
 
-        return {
+        const finalFile = {
             id: result._id,
             multipart: false,
+            _id: result._id,
             name: file.name,
             url: result.url,
             createdAt: result.createdAt,
             size: file.size,
-            type: file.type,
-            _id: result._id
+            type: file.type
         };
+        await storageService.addFile(finalFile);
+        await storageService.deleteUploadSession(sessionId);
+        return finalFile;
     }
 
     const chunks = splitFile(
-    file,
-    config.CHUNK_SIZE
-);
+        file,
+        config.CHUNK_SIZE
+    );
 
-const sessionId=getSessionId(file);
+    const sessionId = getSessionId(file);
 
-let session= resumeSession || await storageService.getUploadSession(sessionId);
+    let session = resumeSession || await storageService.getUploadSession(sessionId);
 
-if(!session){
+    if (!session) {
 
-    session={
-        sessionId,
-        status:"uploading",
-        multipart:true,
-        name:file.name,
-        type:file.type,
-        size:file.size,
-        lastModified:file.lastModified,
-        chunkSize:config.CHUNK_SIZE,
-        totalChunks:chunks.length,
-        createdAt:new Date().toISOString(),
-        nextChunk:0,
-        parts:[]
-    };
+        session = {
+            sessionId,
+            status: "uploading",
+            multipart: true,
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            lastModified: file.lastModified,
+            chunkSize: config.CHUNK_SIZE,
+            totalChunks: chunks.length,
+            createdAt: new Date().toISOString(),
+            nextChunk: 0,
+            parts: []
+        };
 
-    await storageService.createUploadSession(session);
+        await storageService.createUploadSession(session);
 
-}
+    }
 
-const parts=[...session.parts];
+    const parts = [...session.parts];
 
-let uploadedBytes=parts.reduce(
-    (t,p)=>t+p.size,
-    0
-);
-onProgress({
+    let uploadedBytes = parts.reduce(
+        (t, p) => t + p.size,
+        0
+    );
+    onProgress({
 
-    percent:Math.round(
+        percent: Math.round(
 
-        uploadedBytes/
+            uploadedBytes /
 
-        file.size*100
+            file.size * 100
 
-    ),
+        ),
 
-    speed:"0 MB/s",
+        speed: "0 MB/s",
 
-    eta:"Calculating..."
+        eta: "Calculating..."
 
-});
-const uploadStarted=Date.now();
+    });
+    const uploadStarted = Date.now();
 
 
-for(let i=session.nextChunk;i<chunks.length;i++){
-    const chunk=chunks[i];
-    let retry=0;
-    while(true){
-        try{
-            const result=await uploadSingle(
+    for (let i = session.nextChunk; i < chunks.length; i++) {
+        const chunk = chunks[i];
+        let retry = 0;
+        while (true) {
+            try {
+                const result = await uploadSingle(
 
-                chunk.file,
+                    chunk.file,
 
-                progress=>{
+                    progress => {
 
-                    const totalUploaded=
-                        uploadedBytes+
-                        progress.loaded;
+                        const totalUploaded =
+                            uploadedBytes +
+                            progress.loaded;
 
-                    const percent=Math.round(
-                        totalUploaded/
-                        file.size*
-                        100
-                    );
+                        const percent = Math.round(
+                            totalUploaded /
+                            file.size *
+                            100
+                        );
 
-                    const elapsed=
-                        (Date.now()-uploadStarted)/1000;
+                        const elapsed =
+                            (Date.now() - uploadStarted) / 1000;
 
-                    const speedBytes=
-                        elapsed>0
-                        ?totalUploaded/elapsed
-                        :0;
+                        const speedBytes =
+                            elapsed > 0
+                                ? totalUploaded / elapsed
+                                : 0;
 
-                    const eta=
-                        speedBytes>0
-                        ?(file.size-totalUploaded)/speedBytes
-                        :0;
+                        const eta =
+                            speedBytes > 0
+                                ? (file.size - totalUploaded) / speedBytes
+                                : 0;
 
-                    onProgress({
+                        onProgress({
 
-                        percent,
+                            percent,
 
-                        speed:
-                        (
-                            speedBytes/
-                            1024/
-                            1024
-                        ).toFixed(2)
-                        +" MB/s",
+                            speed:
+                                (
+                                    speedBytes /
+                                    1024 /
+                                    1024
+                                ).toFixed(2)
+                                + " MB/s",
 
-                        eta:
-                        Math.round(eta)
-                        +" sec"
+                            eta:
+                                Math.round(eta)
+                                + " sec"
 
-                    });
+                        });
 
-                },
+                    },
 
-                signal
+                    signal
 
-            );
+                );
 
-            uploadedBytes+=chunk.size;
+                uploadedBytes += chunk.size;
 
-            parts.push({
+                parts.push({
 
-                index:i,
+                    index: i,
 
-                _id:result._id,
+                    _id: result._id,
 
-                url:result.url,
+                    url: result.url,
 
-                size:chunk.size
+                    size: chunk.size
 
-            });
+                });
 
-            await storageService.updateUploadSession(
+                await storageService.updateUploadSession(
 
-                sessionId,
+                    sessionId,
 
-                {
+                    {
 
-                    nextChunk:i+1,
+                        nextChunk: i + 1,
 
-                    parts
+                        parts
+
+                    }
+
+                );
+
+                break;
+
+            }
+
+            catch (err) {
+
+                retry++;
+
+                if (
+
+                    retry >
+
+                    config.UPLOAD_RETRY_COUNT
+
+                ) {
+
+                    throw err;
 
                 }
-
-            );
-
-            break;
-
-        }
-
-        catch(err){
-
-            retry++;
-
-            if(
-
-                retry>
-
-                config.UPLOAD_RETRY_COUNT
-
-            ){
-
-                throw err;
 
             }
 
@@ -273,31 +294,29 @@ for(let i=session.nextChunk;i<chunks.length;i++){
 
     }
 
-}
+    const finalFile = {
 
-const finalFile={
+        id: "virtual-" + crypto.randomUUID(),
 
-    id:"virtual-"+crypto.randomUUID(),
+        multipart: true,
 
-    multipart:true,
+        name: file.name,
 
-    name:file.name,
+        type: file.type,
 
-    type:file.type,
+        size: file.size,
 
-    size:file.size,
+        createdAt: new Date().toISOString(),
 
-    createdAt:new Date().toISOString(),
+        parts
 
-    parts
+    };
 
-};
+    await storageService.addFile(finalFile);
 
-await storageService.addFile(finalFile);
+    await storageService.deleteUploadSession(sessionId);
 
-await storageService.deleteUploadSession(sessionId);
-
-return finalFile;
+    return finalFile;
 }
 
 export default uploadFile;

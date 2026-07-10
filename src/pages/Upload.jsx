@@ -99,16 +99,17 @@ function Upload() {
                                     </b>
                                     <br />
                                     {
-                                        Math.round(
-                                            session.nextChunk /
-                                            session.totalChunks * 100
-                                        )
+                                        session.multipart ?
+                                            Math.round(
+                                                session.nextChunk /
+                                                session.totalChunks * 100
+                                            )
+                                            + "%":"Single File"
                                     }
-                                    %
                                 </div>
                                 <div>
                                     <button
-                                        onClick={()=>{
+                                        onClick={() => {
                                             setResumeSession(session);
                                             resumeInput.current.click();
                                         }}
