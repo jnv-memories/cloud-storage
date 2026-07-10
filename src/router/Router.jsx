@@ -7,6 +7,7 @@ import {
 import Navbar from "../components/Navbar";
 
 import Home from "../pages/Home";
+import FolderPage from "../pages/FolderPage";
 import Upload from "../pages/Upload";
 
 function Router() {
@@ -22,6 +23,10 @@ function Router() {
                 <Route
                     path="/"
                     element={<Home />}
+                />
+                <Route
+                    path="/folder/:folderId"
+                    element={<FolderPage/>}
                 />
 
                 <Route

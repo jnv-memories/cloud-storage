@@ -7,7 +7,8 @@ import {
     query,
     orderBy,
     setDoc,
-    getDoc
+    getDoc,
+    where
 } from "firebase/firestore";
 
 import db from "../config/firebase";
@@ -15,11 +16,12 @@ import db from "../config/firebase";
 const FILE_COLLECTION="uploadedFiles";
 const SESSION_COLLECTION="uploadSessions";
 
-const getFiles=async()=>{
+const getFiles=async(folderId)=>{
 
     const q=query(
         collection(db,FILE_COLLECTION),
-        orderBy("createdAt","desc")
+        where("folderId","==",folderId),
+       // orderBy("createdAt","desc")
     );
 
     const snapshot=await getDocs(q);

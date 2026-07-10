@@ -25,12 +25,13 @@ function useUploader(){
 
     };
 
-    const addToQueue=(files,resumeSession=null)=>{
+    const addToQueue=(files,folderId,resumeSession=null)=>{
 
         const list=Array.from(files).map(file=>({
 
             id:crypto.randomUUID(),
             file,
+            folderId,
             resumeSession,
             progress:resumeSession
             ?Math.round(
@@ -85,6 +86,8 @@ function useUploader(){
                 },
 
                 controller.signal,
+                
+                item.folderId,
                 item.resumeSession
 
             );

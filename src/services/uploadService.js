@@ -89,7 +89,7 @@ async function uploadSingle(file, onProgress, signal) {
     };
 }
 
-async function uploadFile(file, onProgress = () => { }, signal, resumeSession = null) {
+async function uploadFile(file, onProgress = () => { }, signal, folderId, resumeSession = null) {
     if (file.size <= config.MULTIPART_LIMIT) {
         const sessionId = getSessionId(file);
         let session = resumeSession || await storageService.getUploadSession(sessionId);
@@ -117,13 +117,14 @@ async function uploadFile(file, onProgress = () => { }, signal, resumeSession = 
             id: result._id,
             multipart: false,
             _id: result._id,
+            folderId,
             name: file.name,
             url: result.url,
             createdAt: result.createdAt,
             size: file.size,
             type: file.type
         };
-        await storageService.addFile(finalFile);
+        //await storageService.addFile(finalFile);
         await storageService.deleteUploadSession(sessionId);
         return finalFile;
     }
@@ -299,7 +300,7 @@ async function uploadFile(file, onProgress = () => { }, signal, resumeSession = 
         id: "virtual-" + crypto.randomUUID(),
 
         multipart: true,
-
+        folderId,
         name: file.name,
 
         type: file.type,
@@ -312,7 +313,7 @@ async function uploadFile(file, onProgress = () => { }, signal, resumeSession = 
 
     };
 
-    await storageService.addFile(finalFile);
+    //await storageService.addFile(finalFile);
 
     await storageService.deleteUploadSession(sessionId);
 

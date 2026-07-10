@@ -1,11 +1,17 @@
 import { useEffect, useState, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import useUploader from "../hooks/useUploader";
 import UploadProgress from "../components/UploadProgress";
 import "../styles/upload.css";
 import storageService from "../services/storageService";
+import folderService from "../services/folderService";
 
 function Upload() {
+    const [folder, setFolder] = useState(null);
     const resumeInput = useRef();
+    const [searchParams] = useSearchParams();
+
+    const folderId = searchParams.get("folder");
     const [resumeSession, setResumeSession] = useState(null);
 
     const [sessions, setSessions] = useState([]);
@@ -14,6 +20,18 @@ function Upload() {
         loadSessions();
 
     }, []);
+
+    useEffect(() => {
+
+        if (!folderId) return;
+
+        folderService
+
+            .getFolder(folderId)
+
+            .then(setFolder);
+
+    }, [folderId]);
 
     const loadSessions = async () => {
 
@@ -39,7 +57,7 @@ function Upload() {
         const fileArray = Array.from(files);
 
         if (fileArray.length > 0) {
-            addToQueue(fileArray);
+            addToQueue(fileArray, folderId);
         }
     };
     const chooseFiles = (e) => {
@@ -79,6 +97,7 @@ function Upload() {
                     }
                     addToQueue(
                         [file],
+                        resumeSession.folderId,
                         resumeSession
                     );
                 }}
@@ -104,7 +123,7 @@ function Upload() {
                                                 session.nextChunk /
                                                 session.totalChunks * 100
                                             )
-                                            + "%":"Single File"
+                                            + "%" : "Single File"
                                     }
                                 </div>
                                 <div>
@@ -130,6 +149,24 @@ function Upload() {
                         ))
                     }
                 </div>
+            }
+            {
+                folderId &&
+
+                <p className="uploadLocation">
+
+                    Uploading to folder
+
+                    <br />
+
+                    <b>
+                        {
+                            folder ? folder.name : folderId
+                        }
+                    </b>
+
+                </p>
+
             }
             <div
                 className="dropZone"
