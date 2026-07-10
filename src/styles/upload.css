@@ -1,0 +1,80 @@
+.dropZone{
+    margin-top:20px;
+    border:3px dashed #999;
+    border-radius:12px;
+    padding:60px;
+    text-align:center;
+    cursor:pointer;
+    background:white;
+}
+.dropZone:hover{
+    border-color:#0066ff;
+}
+.queue{
+    margin-top:30px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+.uploadCard{
+    background:white;
+    border-radius:10px;
+    padding:18px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+.uploadHeader{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.fileSize{
+    color:#777;
+    font-size:14px;
+    margin-top:4px;
+}
+.progress{
+    margin-top:18px;
+    width:100%;
+    height:12px;
+    background:#ddd;
+    border-radius:50px;
+    overflow:hidden;
+}
+.progressFill{
+    width:0%;
+    height:100%;
+    background:#2b8cff;
+    transition:.2s;
+}
+.details{
+    display:flex;
+    justify-content:space-between;
+    margin-top:15px;
+    font-size:14px;
+}
+.uploadBtn{
+    margin-top:30px;
+    padding:15px 30px;
+    font-size:17px;
+    cursor:pointer;
+}
+.resumeBox{
+margin:25px 0;
+background:#fff;
+padding:20px;
+border-radius:12px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+.resumeCard{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px 0;
+border-bottom:1px solid #eee;
+}
+.resumeCard:last-child{
+border:none;
+}
+.resumeCard button{
+margin-left:10px;
+}
