@@ -8,29 +8,57 @@ export async function downloadQueue(
 
     onProgress = () => {}
 
-) {
+){
 
-    const blobs = new Array(parts.length);
+    const blobs=new Array(parts.length);
 
-    let completedBytes = 0;
+    let current=0;
 
-    let current = 0;
+    let downloadedBytes=0;
 
-    const totalBytes = parts.reduce(
+    const totalBytes=parts.reduce(
 
-        (sum, part) => sum + part.size,
+        (sum,part)=>sum+part.size,
 
         0
 
     );
 
-    const started = Date.now();
+    const started=Date.now();
 
-    async function worker() {
+    async function downloadPart(index){
 
-        while (true) {
+        const response=await fetch(
 
-            if (signal.aborted) {
+            parts[index].url,
+
+            {
+
+                signal
+
+            }
+
+        );
+
+        if(!response.ok){
+
+            throw new Error(
+
+                "Download failed"
+
+            );
+
+        }
+
+        const reader=response.body.getReader();
+
+        const chunks=[];
+
+        let received=0;
+
+        while(true){
+
+            if(signal.aborted){
 
                 throw new DOMException(
 
@@ -42,93 +70,129 @@ export async function downloadQueue(
 
             }
 
-            const index = current++;
+            const{
 
-            if (index >= parts.length) {
+                done,
 
-                return;
+                value
+
+            }=await reader.read();
+
+            if(done){
+
+                break;
 
             }
 
-            const response = await fetch(
+            chunks.push(value);
 
-                parts[index].url,
+            received+=value.length;
 
-                {
+            downloadedBytes+=value.length;
 
-                    signal
+            const elapsed=Math.max(
 
-                }
+                (Date.now()-started)/1000,
+
+                0.001
 
             );
 
-            if (!response.ok) {
+            const speed=
 
-                throw new Error(
-
-                    "Download failed"
-
-                );
-
-            }
-
-            const blob = await response.blob();
-
-            blobs[index] = blob;
-
-            completedBytes += blob.size;
-
-            const elapsed =
-
-                (Date.now() - started) /
-
-                1000;
-
-            const speed =
-
-                completedBytes /
+                downloadedBytes/
 
                 elapsed;
 
-            const eta =
+            const eta=
 
-                (totalBytes - completedBytes) /
+                (
+
+                    totalBytes-
+
+                    downloadedBytes
+
+                )/
 
                 speed;
 
             onProgress({
 
-                percent: Math.round(
+                percent:Math.round(
 
-                    completedBytes /
+                    downloadedBytes/
 
-                    totalBytes *
+                    totalBytes*
 
                     100
 
                 ),
 
+                downloaded:
+
+                    downloadedBytes,
+
+                total:
+
+                    totalBytes,
+
                 speed:
 
                     (
 
-                        speed /
+                        speed/
 
-                        1024 /
+                        1024/
 
                         1024
 
                     ).toFixed(2)
 
-                    + " MB/s",
+                    +" MB/s",
 
                 eta:
 
                     Math.round(eta)
 
-                    + " sec"
+                    +" sec"
 
             });
+
+        }
+
+        blobs[index]=new Blob(
+
+            chunks
+
+        );
+
+    }
+
+    async function worker(){
+
+        while(true){
+
+            if(signal.aborted){
+
+                throw new DOMException(
+
+                    "Cancelled",
+
+                    "AbortError"
+
+                );
+
+            }
+
+            const index=current++;
+
+            if(index>=parts.length){
+
+                return;
+
+            }
+
+            await downloadPart(index);
 
         }
 
@@ -140,7 +204,7 @@ export async function downloadQueue(
 
             {
 
-                length: Math.min(
+                length:Math.min(
 
                     concurrency,
 
@@ -150,7 +214,7 @@ export async function downloadQueue(
 
             },
 
-            worker
+            ()=>worker()
 
         )
 
