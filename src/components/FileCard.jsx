@@ -159,7 +159,7 @@ function FileCard({ file }) {
                             target="_blank"
                             rel="noreferrer"
                         >
-                            Open
+                            Download
                         </a>
                     </>
                 }
