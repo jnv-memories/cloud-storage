@@ -1,3 +1,72 @@
+/* --- GLOBAL VARIABLES & THEME --- */
+:root {
+    /* Light Mode Variables */
+    --bg-body: #f5f5f5;
+    --bg-card: #ffffff;
+    --bg-secondary: #f1f3f5;
+    --bg-secondary-hover: #e2e6ea;
+    --bg-accent-light: #eef6ff;
+    --bg-file-icon: #f8f9fa;
+    
+    --text-main: #222222;
+    --text-heading: #2c3e50;
+    --text-muted: #6c757d;
+    --text-cancel: #495057;
+    
+    --border-color: #eaeaea;
+    --border-input: #dce1e6;
+    --border-dashed: #999999;
+    --border-light: #eeeeee;
+    
+    --primary: #007bff;
+    --primary-hover: #0056b3;
+    --primary-shadow: rgba(0, 123, 255, 0.35);
+    --primary-shadow-hover: rgba(0, 123, 255, 0.5);
+    
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+    
+    --modal-overlay: rgba(0, 0, 0, 0.4);
+    --progress-bg: #dddddd;
+    --upload-location-bg: #2d2d35;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Dark Mode Variables */
+        --bg-body: #121212;
+        --bg-card: #1e1e1e;
+        --bg-secondary: #2d2d2d;
+        --bg-secondary-hover: #3d3d3d;
+        --bg-accent-light: rgba(0, 123, 255, 0.15);
+        --bg-file-icon: #252525;
+        
+        --text-main: #e0e0e0;
+        --text-heading: #f5f6f7;
+        --text-muted: #a0a0a0;
+        --text-cancel: #cccccc;
+        
+        --border-color: #2d2d2d;
+        --border-input: #3d3d3d;
+        --border-dashed: #555555;
+        --border-light: #2d2d2d;
+        
+        --primary: #3b99ff;
+        --primary-hover: #1a85ff;
+        --primary-shadow: rgba(59, 153, 255, 0.25);
+        --primary-shadow-hover: rgba(59, 153, 255, 0.4);
+        
+        --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.2);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+        
+        --modal-overlay: rgba(0, 0, 0, 0.6);
+        --progress-bg: #333333;
+        --upload-location-bg: #1a1a22;
+    }
+}
+
 *{
     margin:0;
     padding:0;
@@ -6,8 +75,9 @@
 
 body{
     font-family:Arial,Helvetica,sans-serif;
-    background:#f5f5f5;
-    color:#222;
+    background: var(--bg-body); 
+    color: var(--text-main);
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 a{
