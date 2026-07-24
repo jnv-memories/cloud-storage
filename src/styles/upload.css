@@ -1,0 +1,110 @@
+.dropZone {
+    margin-top: 20px;
+    border: 3px dashed var(--border-dashed);
+    border-radius: 12px;
+    padding: 60px;
+    text-align: center;
+    cursor: pointer;
+    background: var(--bg-card); 
+    color: var(--text-muted);
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.dropZone:hover {
+    border-color: var(--primary);
+    background: var(--bg-accent-light);
+}
+
+.queue {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.uploadCard {
+    background: var(--bg-card); /* Changes automatically in dark mode */
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.uploadHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-heading);
+}
+
+.fileSize {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.progress {
+    margin-top: 18px;
+    width: 100%;
+    height: 12px;
+    background: var(--progress-bg);
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.progressFill {
+    width: 0%;
+    height: 100%;
+    background: var(--primary);
+    transition: 0.2s;
+}
+
+.details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.uploadBtn {
+    margin-top: 30px;
+    padding: 15px 30px;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.resumeBox {
+    margin: 25px 0;
+    background: var(--bg-card); /* Changes automatically in dark mode */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.resumeCard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-main);
+}
+
+.resumeCard:last-child {
+    border: none;
+}
+
+.resumeCard button {
+    margin-left: 10px;
+}
+
+.uploadLocation {
+    margin-bottom: 20px;
+    padding: 12px;
+    border-radius: 10px;
+    background: var(--upload-location-bg);
+    color: white; 
+    text-align: center;
+}

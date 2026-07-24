@@ -1,0 +1,448 @@
+.fileGrid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill,minmax(240px,1fr));
+    gap:20px;
+}
+
+/* --- FOLDER CARD --- */
+.folderCard{
+    background: var(--bg-card);
+    padding:18px 20px;
+    border-radius:12px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.folderCard:hover{
+    transform: translateY(-2px);
+    border-color: var(--primary);
+    box-shadow: 0 6px 16px var(--primary-shadow);
+}
+
+.folderCard-content {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    overflow: hidden;
+}
+
+.folderIcon{
+    width: 40px;
+    height: 40px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: var(--bg-accent-light);
+    color: var(--primary);
+    border-radius:8px;
+    flex-shrink: 0;
+}
+
+.folderCard h3{
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-heading);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.folder-arrow {
+    color: var(--text-muted);
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.folderCard:hover .folder-arrow {
+    color: var(--primary);
+    transform: translateX(3px);
+}
+
+/* --- FILE CARD --- */
+.fileCard{
+    background: var(--bg-card);
+    padding:15px;
+    border-radius:12px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.preview{
+    width:100%;
+    height:180px;
+    object-fit:contain;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.fileIcon{
+    height:180px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: var(--bg-file-icon);
+    border-radius:8px;
+    color: var(--text-muted);
+}
+
+.fileCard h3{
+    margin-top:15px;
+    font-size: 15px;
+    color: var(--text-heading);
+    word-break:break-word;
+}
+
+.fileCard p{
+    font-size:13px;
+    color: var(--text-muted);
+    margin-top:8px;
+    word-break:break-all;
+}
+
+.actions{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.actions button,
+.actions a{
+    padding:8px 12px;
+    background: var(--bg-secondary);
+    color: var(--text-main);
+    font-weight: 500;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    text-decoration: none;
+    font-size: 13px;
+    transition: background 0.2s ease;
+}
+
+.actions button:hover,
+.actions a:hover {
+    background: var(--bg-secondary-hover);
+}
+
+/* --- FLOATING ACTION BUTTONS --- */
+.fab-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 100;
+}
+
+.fab-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--primary-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.fab-button:hover {
+    transform: translateY(-2px);
+    background-color: var(--primary-hover);
+    box-shadow: 0 6px 16px var(--primary-shadow-hover);
+}
+
+.fab-button.secondary {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.fab-button.secondary:hover {
+    box-shadow: var(--shadow-md);
+    background-color: var(--bg-secondary);
+}
+
+.btn-cancel {
+    background: var(--bg-secondary);
+    color: var(--text-cancel);
+}
+
+.btn-cancel:hover {
+    background: var(--bg-secondary-hover);
+}
+
+.btn-create {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-create:hover {
+    background: var(--primary-hover);
+}
+
+/* --- PAGE HEADER & BACK BUTTON --- */
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.page-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: var(--text-heading);
+    font-weight: 600;
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-cancel);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.back-btn:hover {
+    background: var(--bg-secondary);
+    color: var(--primary);
+    border-color: var(--primary);
+    transform: translateX(-2px);
+}
+
+/* --- IMAGE PREVIEW MODAL --- */
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.85);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+.modal img{
+    max-width:90%;
+    max-height:90%;
+    border-radius:10px;
+}
+
+/* --- CUSTOM FORM MODAL --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--modal-overlay);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+}
+
+.modal-box {
+    background: var(--bg-card);
+    padding: 24px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+}
+
+.modal-box h3 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    color: var(--text-heading);
+}
+
+.modal-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border-input);
+    border-radius: 8px;
+    font-size: 15px;
+    background: var(--bg-card);
+    color: var(--text-main);
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+}
+
+.modal-input:focus {
+    border-color: var(--primary);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-actions button {
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+}
+
+/* --- NAVBAR --- */
+.navbar{
+    height:60px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 25px;
+    background: var(--bg-card);
+    box-shadow: var(--shadow-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.links{
+    display:flex;
+    gap:20px;
+}
+
+.logo{
+    font-weight:bold;
+    font-size:22px;
+    color: var(--text-heading);
+}
+
+/* --- UPLOAD & DROPZONE --- */
+.dropZone{
+    margin-top:20px;
+    border:3px dashed var(--border-dashed);
+    border-radius:12px;
+    padding:60px;
+    text-align:center;
+    cursor:pointer;
+    background: var(--bg-card);
+    color: var(--text-muted);
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.dropZone:hover{
+    border-color: var(--primary);
+    background: var(--bg-accent-light);
+}
+
+.queue{
+    margin-top:30px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.uploadCard{
+    background: var(--bg-card);
+    border-radius:10px;
+    padding:18px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.uploadHeader{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color: var(--text-heading);
+}
+
+.fileSize{
+    color: var(--text-muted);
+    font-size:14px;
+    margin-top:4px;
+}
+
+.progress{
+    margin-top:18px;
+    width:100%;
+    height:12px;
+    background: var(--progress-bg);
+    border-radius:50px;
+    overflow:hidden;
+}
+
+.progressFill{
+    width:0%;
+    height:100%;
+    background: var(--primary);
+    transition:.2s;
+}
+
+.details{
+    display:flex;
+    justify-content:space-between;
+    margin-top:15px;
+    font-size:14px;
+    color: var(--text-muted);
+}
+
+.uploadBtn{
+    margin-top:30px;
+    padding:15px 30px;
+    font-size:17px;
+    cursor:pointer;
+}
+
+/* --- RESUME MODULE --- */
+.resumeBox{
+    margin:25px 0;
+    background: var(--bg-card);
+    padding:20px;
+    border-radius:12px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.resumeCard{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 0;
+    border-bottom:1px solid var(--border-light);
+    color: var(--text-main);
+}
+
+.resumeCard:last-child{
+    border:none;
+}
+
+.resumeCard button{
+    margin-left:10px;
+}
+
+.uploadLocation{
+    margin-bottom:20px;
+    padding:12px;
+    border-radius:10px;
+    background: var(--upload-location-bg);
+    color:white;
+    text-align:center;
+}
