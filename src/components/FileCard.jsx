@@ -115,9 +115,11 @@ function FileCard({ file }) {
             }
             {
                 file.multipart &&
-                <div className="fileIcon">
-                    MULTIPART
-                </div>
+                <video
+                    src={'https://stream-server-zi0q.onrender.com/stream/'+ file.id}
+                    className="preview"
+                    controls
+                />
             }
             {
                 !file.multipart &&
