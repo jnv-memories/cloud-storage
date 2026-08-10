@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import storageService from "../services/storageService";
 import folderService from "../services/folderService";
-import { addFileFromUrl } from "../utils/addFromUrl"; // NEW: Import the utility
+import { addFileFromUrl } from "../utils/addFromUrl";
 import FileCard from "../components/FileCard";
 import "../styles/home.css";
 
@@ -12,11 +12,9 @@ function FolderPage() {
     const [folders, setFolders] = useState([]);
     const [files, setFiles] = useState([]);
 
-    // Custom Modal State - Folder
     const [showModal, setShowModal] = useState(false);
     const [folderName, setFolderName] = useState("");
 
-    // Custom Modal State - URL (NEW)
     const [showUrlModal, setShowUrlModal] = useState(false);
     const [fileUrl, setFileUrl] = useState("");
     const [isSubmittingUrl, setIsSubmittingUrl] = useState(false);
@@ -41,17 +39,17 @@ function FolderPage() {
         load();
     }
 
-    // NEW: Handle URL Submission
     async function handleAddFromUrl(e) {
         e.preventDefault();
         if (!fileUrl.trim()) return;
-        
+
         setIsSubmittingUrl(true);
+
         try {
             await addFileFromUrl(fileUrl.trim(), folderId);
             setFileUrl("");
             setShowUrlModal(false);
-            load(); // Reload to show the newly queued/added file if applicable
+            load();
         } catch (error) {
             console.error("Failed to add from URL", error);
             alert("Failed to add file from URL. Please try again.");
@@ -62,15 +60,14 @@ function FolderPage() {
 
     return (
         <div className="page">
-            
             <div className="page-header">
-                <button 
-                    className="back-btn" 
+                <button
+                    className="back-btn"
                     onClick={() => {
                         if (window.history.state && window.history.state.idx > 0) {
                             navigate(-1);
                         } else {
-                            navigate('/', { replace: true });
+                            navigate("/", { replace: true });
                         }
                     }}
                     title="Go Back"
@@ -112,19 +109,22 @@ function FolderPage() {
             )}
 
             <h2>Files</h2>
+
             {files.length === 0 ? (
                 <p style={{ color: "#6c757d" }}>No files uploaded yet.</p>
             ) : (
                 <div className="fileGrid">
                     {files.map(file => (
-                        <FileCard key={file.id} file={file} />
+                        <FileCard
+                            key={file.id}
+                            file={file}
+                            files={files}
+                        />
                     ))}
                 </div>
             )}
 
-            {/* FLOATING ACTION BUTTONS */}
             <div className="fab-container">
-                {/* NEW: URL Button */}
                 <button
                     className="fab-button secondary"
                     onClick={() => setShowUrlModal(true)}
@@ -148,7 +148,7 @@ function FolderPage() {
                     </svg>
                     New Folder
                 </button>
-                
+
                 <button
                     className="fab-button"
                     onClick={() => {
@@ -164,7 +164,6 @@ function FolderPage() {
                 </button>
             </div>
 
-            {/* CUSTOM FOLDER CREATION MODAL */}
             {showModal && (
                 <div className="modal-overlay" onClick={() => setShowModal(false)}>
                     <div className="modal-box" onClick={e => e.stopPropagation()}>
@@ -198,7 +197,6 @@ function FolderPage() {
                 </div>
             )}
 
-            {/* NEW: CUSTOM URL MODAL */}
             {showUrlModal && (
                 <div className="modal-overlay" onClick={() => setShowUrlModal(false)}>
                     <div className="modal-box" onClick={e => e.stopPropagation()}>
