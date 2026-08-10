@@ -19,6 +19,11 @@ function FileCard({ file }) {
             file.url
         );
     };
+    const copyURLforMulti = (fileId) => {
+        navigator.clipboard.writeText(
+            `https://stream-server-y1io.onrender.com/stream/${file.id}`
+        );
+    };
     const startDownload = async () => {
         const controller =
             new AbortController();
@@ -116,7 +121,7 @@ function FileCard({ file }) {
             {
                 file.multipart &&
                 <video
-                    src={'https://stream-server-zi0q.onrender.com/stream/'+ file.id}
+                    src={'https://stream-server-y1io.onrender.com/stream/'+ file.id}
                     className="preview"
                     controls
                 />
@@ -163,6 +168,16 @@ function FileCard({ file }) {
                         >
                             Download
                         </a>
+                    </>
+                }
+                {
+                    file.multipart &&
+                    <>
+                        <button
+                            onClick={() => copyURLforMulti(file.id)}
+                        >
+                            Copy URL
+                        </button>
                     </>
                 }
                 {
