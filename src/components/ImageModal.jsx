@@ -48,28 +48,38 @@ function ImageModal({
     const video = isVideo(currentFile.type);
 
     return (
-        <div className="modal" onClick={close}>
+        <div className="media-viewer" onClick={close}>
+            <button
+                className="media-viewer-close"
+                onClick={e => {
+                    e.stopPropagation();
+                    close();
+                }}
+                aria-label="Close viewer"
+                title="Close"
+            >
+                ×
+            </button>
+
             <div
-                className="modal-nav-zone modal-nav-left"
+                className="media-viewer-nav media-viewer-nav-left"
                 onClick={e => {
                     e.stopPropagation();
                     onPrevious();
                 }}
                 aria-label="Previous file"
             >
-                <span className="modal-nav-arrow">
-                    ‹
-                </span>
+                <span className="media-viewer-arrow">‹</span>
             </div>
 
             <div
-                className="modal-media-container"
+                className="media-viewer-content"
                 onClick={e => e.stopPropagation()}
             >
                 {image && (
                     <img
                         src={mediaUrl}
-                        className="modal-media"
+                        className="media-viewer-media"
                         draggable="false"
                         alt={currentFile.name}
                     />
@@ -78,7 +88,7 @@ function ImageModal({
                 {video && (
                     <video
                         src={mediaUrl}
-                        className="modal-media modal-video"
+                        className="media-viewer-media media-viewer-video"
                         controls
                         autoPlay
                         playsInline
@@ -87,29 +97,27 @@ function ImageModal({
             </div>
 
             <div
-                className="modal-nav-zone modal-nav-right"
+                className="media-viewer-nav media-viewer-nav-right"
                 onClick={e => {
                     e.stopPropagation();
                     onNext();
                 }}
                 aria-label="Next file"
             >
-                <span className="modal-nav-arrow">
-                    ›
-                </span>
+                <span className="media-viewer-arrow">›</span>
             </div>
 
             <div
-                className="modal-file-info"
+                className="media-viewer-info"
                 onClick={e => e.stopPropagation()}
             >
-                <div className="modal-file-name">
+                <span className="media-viewer-name">
                     {currentFile.name}
-                </div>
+                </span>
 
-                <div className="modal-file-position">
+                <span className="media-viewer-position">
                     {currentIndex + 1} / {files.length}
-                </div>
+                </span>
             </div>
         </div>
     );
