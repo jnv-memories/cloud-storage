@@ -32,7 +32,7 @@ function Navbar() {
                     className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"}
                     title={hasToken ? "Token active" : "Login required"}
                 >
-                    {hasToken ? "🔓 Auth" : "🔒 Auth"}
+                    {hasToken ? "Auth" : "Auth"}
                 </NavLink>
             </div>
         </nav>
