@@ -171,22 +171,9 @@
         height: 82vh;
     }
 
+    /* Hide tap-target nav zones on mobile — swipe handles it */
     .media-viewer-nav {
-        width: 25%;
-    }
-
-    .media-viewer-nav-left {
-        padding-left: 8px;
-    }
-
-    .media-viewer-nav-right {
-        padding-right: 8px;
-    }
-
-    .media-viewer-arrow {
-        width: 40px;
-        height: 40px;
-        font-size: 32px;
+        display: none;
     }
 
     .media-viewer-close {
@@ -204,5 +191,33 @@
 
     .media-viewer-name {
         max-width: 60vw;
+    }
+}
+
+/* Swipe hint — only shown on touch devices via CSS hover detection */
+.media-viewer-swipe-hint {
+    display: none;
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    pointer-events: none;
+    animation: hint-fade 2.5s ease forwards;
+}
+
+@keyframes hint-fade {
+    0%   { opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Show hint only on devices that don't support hover (touch devices) */
+@media (hover: none) and (pointer: coarse) {
+    .media-viewer-swipe-hint {
+        display: block;
     }
 }

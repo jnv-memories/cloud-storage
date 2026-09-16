@@ -4,6 +4,13 @@
     gap:20px;
 }
 
+@media (max-width: 480px) {
+    .fileGrid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}
+
 /* --- FOLDER CARD --- */
 .folderCard{
     background: var(--bg-card);
@@ -129,15 +136,42 @@
     background: var(--bg-secondary-hover);
 }
 
-/* --- FLOATING ACTION BUTTONS --- */
+/* --- FLOATING ACTION BUTTONS / SPEED-DIAL --- */
 .fab-container {
     position: fixed;
     bottom: 30px;
     right: 30px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: flex-end;
+    gap: 10px;
     z-index: 100;
+}
+
+/* Secondary actions list — hidden until open */
+.fab-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition: max-height 0.3s ease, opacity 0.25s ease, transform 0.25s ease;
+}
+
+.fab-open .fab-actions {
+    max-height: 300px;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+/* Label text inside secondary buttons */
+.fab-label {
+    display: inline;
 }
 
 .fab-button {
@@ -155,6 +189,7 @@
     cursor: pointer;
     box-shadow: var(--primary-shadow);
     transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    white-space: nowrap;
 }
 
 .fab-button:hover {
@@ -173,6 +208,52 @@
 .fab-button.secondary:hover {
     box-shadow: var(--shadow-md);
     background-color: var(--bg-secondary);
+}
+
+/* Main trigger button */
+.fab-trigger {
+    min-width: 56px;
+    height: 56px;
+    padding: 0 20px;
+}
+
+.fab-trigger-icon {
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+}
+
+.fab-trigger-active .fab-trigger-icon {
+    transform: rotate(45deg);
+}
+
+/* On mobile, shrink trigger to icon-only circle when closed */
+@media (max-width: 480px) {
+    .fab-container {
+        bottom: 20px;
+        right: 16px;
+    }
+
+    .fab-trigger-label {
+        display: none;
+    }
+
+    .fab-trigger {
+        width: 56px;
+        padding: 0;
+        border-radius: 50%;
+        justify-content: center;
+    }
+
+    .fab-label {
+        display: none;
+    }
+
+    .fab-button.secondary {
+        width: 52px;
+        padding: 0;
+        border-radius: 50%;
+        justify-content: center;
+    }
 }
 
 .btn-cancel {

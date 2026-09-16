@@ -90,3 +90,21 @@ a{
     margin:auto;
     padding:25px;
 }
+
+@media (max-width: 480px) {
+    .page {
+        padding: 16px 14px 90px; /* bottom clears FAB */
+    }
+}
+
+/* Truncate long folder names in the page header */
+.page-header-title {
+    margin: 0;
+    font-size: 20px;
+    color: var(--text-heading);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}

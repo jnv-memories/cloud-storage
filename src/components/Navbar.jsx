@@ -1,33 +1,31 @@
-import { Link } from "react-router-dom";
-
+import { NavLink } from "react-router-dom";
 import "../styles/navbar.css";
 
 function Navbar() {
-
     return (
-
-        <nav className="navbar">
-
-            <div className="logo">
+        <nav className="navbar" aria-label="Main navigation">
+            <NavLink to="/" className="logo" aria-label="Cloud Storage home">
                 Cloud Storage
-            </div>
+            </NavLink>
 
             <div className="links">
-
-                <Link to="/">
+                <NavLink
+                    to="/"
+                    end
+                    className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"}
+                >
                     Home
-                </Link>
+                </NavLink>
 
-                <Link to="/upload">
+                <NavLink
+                    to="/upload"
+                    className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"}
+                >
                     Upload
-                </Link>
-
+                </NavLink>
             </div>
-
         </nav>
-
     );
-
 }
 
 export default Navbar;

@@ -14,8 +14,8 @@ function Router() {
                     element={<Home />}
                 />
                 <Route
-                    path="/folder/:folderId"
-                    element={<FolderPage/>}
+                    path="/folder/:folderId/:fileId?"
+                    element={<FolderPage />}
                 />
                 <Route
                     path="/upload"
