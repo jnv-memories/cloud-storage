@@ -3,11 +3,9 @@ import tokenStore from "../config/tokenStore";
 import { saveTokenToFirestore } from "../services/tokenService";
 import "../styles/auth.css";
 
-const LOGIN_URL     = "https://pwthor.live/api/auth/login";
-const TOKEN_URL     = "https://api.penpencil.co/v3/oauth/token";
-const CLIENT_ID     = "system-admin";
-const CLIENT_SECRET = "KjPXuAVfC5xbmgreETNMaL7z";
-const ORG_ID        = "5eb393ee95fab7468a79d189";
+const STREAM_SERVER = "https://stream-server-y1io.onrender.com";
+const LOGIN_URL     = `${STREAM_SERVER}/auth/request-otp`;
+const TOKEN_URL     = `${STREAM_SERVER}/auth/verify-otp`;
 
 function Auth() {
     const [step, setStep]           = useState("phone"); // "phone" | "otp" | "done"
@@ -33,7 +31,8 @@ function Auth() {
             const res = await fetch(LOGIN_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ phoneNumber: digits })
+                body: JSON.stringify({ phoneNumber: digits }),
+                credentials: "include"
             });
 
             if (!res.ok) {
@@ -66,14 +65,8 @@ function Auth() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    username:       phone.replace(/\D/g, ""),
-                    otp:            otpDigits,
-                    client_id:      CLIENT_ID,
-                    client_secret:  CLIENT_SECRET,
-                    grant_type:     "password",
-                    organizationId: ORG_ID,
-                    latitude:       0,
-                    longitude:      0
+                    phoneNumber: phone.replace(/\D/g, ""),
+                    otp:         otpDigits
                 })
             });
 
