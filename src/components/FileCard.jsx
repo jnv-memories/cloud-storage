@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ImageModal from "./ImageModal";
-import { isImage, isVideo } from "../utils/fileType";
+import { isImage, isVideo, isUnplayableVideo } from "../utils/fileType";
 import { downloadMultipart } from "../utils/downloadMultipart";
 import "../styles/home.css";
 
@@ -212,22 +212,46 @@ function FileCard({
 
             {!file.multipart &&
                 isVideo(file.type) && (
-                    <video
-                        src={file.url}
-                        className="preview"
-                        controls
-                        onDoubleClick={openViewer}
-                    />
+                    isUnplayableVideo(file.type) ? (
+                        <div className="unplayable-notice">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polygon points="23 7 16 12 23 17 23 7" />
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                                <line x1="4" y1="9" x2="12" y2="15" stroke="red" strokeWidth="2" />
+                                <line x1="12" y1="9" x2="4" y2="15" stroke="red" strokeWidth="2" />
+                            </svg>
+                            <p>Can't play in browser</p>
+                            <span>This format ({file.type}) isn't supported for playback, but you can download it anytime.</span>
+                        </div>
+                    ) : (
+                        <video
+                            src={file.url}
+                            className="preview"
+                            controls
+                            onDoubleClick={openViewer}
+                        />
+                    )
                 )}
 
             {file.multipart &&
                 isVideo(file.type) && (
-                    <video
-                        src={getMediaUrl(file)}
-                        className="preview"
-                        controls
-                        onDoubleClick={openViewer}
-                    />
+                    isUnplayableVideo(file.type) ? (
+                        <div className="unplayable-notice">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polygon points="23 7 16 12 23 17 23 7" />
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                            </svg>
+                            <p>Can't play in browser</p>
+                            <span>This format ({file.type}) isn't supported for playback, but you can download it anytime.</span>
+                        </div>
+                    ) : (
+                        <video
+                            src={getMediaUrl(file)}
+                            className="preview"
+                            controls
+                            onDoubleClick={openViewer}
+                        />
+                    )
                 )}
 
             {!isImage(file.type) &&

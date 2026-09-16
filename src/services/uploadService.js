@@ -4,6 +4,7 @@ import config from "../config/config";
 import storageService from "./storageService";
 import { splitFile } from "../utils/splitFile";
 import { getSessionId } from "../utils/sessionId";
+import { resolveMimeType } from "../utils/fileType";
 
 
 async function uploadSingle(file, onProgress, signal) {
@@ -90,6 +91,8 @@ async function uploadSingle(file, onProgress, signal) {
 }
 
 async function uploadFile(file, onProgress = () => { }, signal, folderId, resumeSession = null) {
+    const fileType = resolveMimeType(file);
+
     if (file.size <= config.MULTIPART_LIMIT) {
         const sessionId = getSessionId(file);
         let session = resumeSession || await storageService.getUploadSession(sessionId);
@@ -101,7 +104,7 @@ async function uploadFile(file, onProgress = () => { }, signal, folderId, resume
                 uploaded: false,
                 name: file.name,
                 size: file.size,
-                type: file.type,
+                type: fileType,
                 lastModified: file.lastModified,
                 createdAt: new Date().toISOString()
             };
@@ -122,7 +125,7 @@ async function uploadFile(file, onProgress = () => { }, signal, folderId, resume
             url: result.url,
             createdAt: result.createdAt,
             size: file.size,
-            type: file.type
+            type: fileType
         };
         //await storageService.addFile(finalFile);
         await storageService.deleteUploadSession(sessionId);
@@ -145,7 +148,7 @@ async function uploadFile(file, onProgress = () => { }, signal, folderId, resume
             status: "uploading",
             multipart: true,
             name: file.name,
-            type: file.type,
+            type: fileType,
             size: file.size,
             lastModified: file.lastModified,
             chunkSize: config.CHUNK_SIZE,
@@ -303,7 +306,7 @@ async function uploadFile(file, onProgress = () => { }, signal, folderId, resume
         folderId,
         name: file.name,
 
-        type: file.type,
+        type: fileType,
 
         size: file.size,
 
